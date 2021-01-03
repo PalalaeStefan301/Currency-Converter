@@ -22,8 +22,10 @@ def clicked():
     label_result.configure(text="Result: "+str(value.__round__(3)))
 
 window = Tk()
+
 window.title("GUI")
-window.geometry('350x200')
+window.geometry('400x400')
+window.configure(background='blue')
 label_1 = Label(window,text="Currency")
 label_2 = Label(window,text="from")
 label_3 = Label(window,text="to")

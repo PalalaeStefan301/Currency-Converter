@@ -11,7 +11,7 @@ def print_file(string):
 def crawl():
     print("Taking current currencies...")
     PATH  = "C:\Program Files (x86)\chromedriver.exe"
-    driver = webdriver.Chrome(PATH)
+    driver = webdriver.Chrome(PATH) #from selenium import webdriver
     driver.get("https://bnr.ro/Exchange-rates-15192.aspx")
     content = driver.find_element_by_tag_name("tbody")
     string = ""
@@ -46,4 +46,4 @@ def read_currencies():
     list.sort()
     return list
 
-#crawl()
+crawl()

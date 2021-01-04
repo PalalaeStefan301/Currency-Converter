@@ -1,34 +1,18 @@
-from selenium import webdriver
+from urllib.request import Request,urlopen
+from bs4 import BeautifulSoup
+import requests
 
+def print_file(string,column_nr):
+    f = open("currencies","a")
+    if column_nr==1:
+         string = string.replace("100 ","")
+         string = string + " "
+    f.write(string)
+    if column_nr==2:
+        f.write('\n')
 
-def print_file(string):
-    f = open("output","a")
-    f.truncate(0)
-    for i in range(32):
-        f.write(string[i]+" "+string[i+32]+"\n")
-    f.write("RON 1.0000")
-    f.close()
-def crawl():
-    print("Taking current currencies...")
-    PATH  = "C:\Program Files (x86)\chromedriver.exe"
-    driver = webdriver.Chrome(PATH) #from selenium import webdriver
-    driver.get("https://bnr.ro/Exchange-rates-15192.aspx")
-    content = driver.find_element_by_tag_name("tbody")
-    string = ""
-    string = content.text
-    string = string.replace("\n"," ")
-    string = string.split(' ')
-    del string[0]
-    del string[9]
-    del string[10]
-    del string[22]
-    del string[32]
-    del string[64:len(string)]
-    print_file(string)
-    driver.quit()
-    print("Current currencies are stored")
 def read_value_of_currency(searched_currency):
-    f = open("output","r")
+    f = open("currencies","r")
     for i in range(33):
         temp = f.readline()
         temp = temp.split(' ')
@@ -36,9 +20,10 @@ def read_value_of_currency(searched_currency):
             return temp[1]
     #print(list)
     f.close()
+
 def read_currencies():
     list = []
-    f = open("output","r")
+    f = open("currencies","r")
     for i in range(33):
         temp = f.readline()
         temp = temp.split(' ')
@@ -46,4 +31,35 @@ def read_currencies():
     list.sort()
     return list
 
-crawl()
+def main():
+    f = open("currencies","a")
+    f.truncate(0)
+    link = "https://bnr.ro/Exchange-rates-15192.aspx"
+    page = requests.get(link)
+    soup = BeautifulSoup(page.content,'html.parser')
+    tb = soup.find('table')
+    list_t = []
+    i = 0
+    for td_elem in tb.find_all('th'):
+        if i!=0:
+            list_t.append(td_elem.get_text())
+            #print_file(str(td_elem.get_text()))
+        i = i+1
+    i = 0
+    for td_elem in tb.find_all('td'):
+        if i!=0:
+            list_t.append(td_elem.get_text())
+            #print_file(str(td_elem.get_text()))
+        if i>31:
+            break
+        i = i+1
+    for i in range(0,32):
+        print_file(list_t[i],1)
+        print_file(list_t[i+32],2)
+    print_file("RON",1)
+    print_file("1.0000",2)
+        
+        
+
+
+main()

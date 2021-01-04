@@ -1,15 +1,17 @@
-from tkinter import Label,Button,Entry,Tk
-import tkinter as tk 
+from tkinter import Label,Button,Entry,Tk,Image
+from tkinter import *
 from tkinter import ttk
 from crawl import *
+from PIL import ImageTk, Image
 
 list_of_currencies = read_currencies()
-
 def clicked():
     value = float(insert_value.get())
     curr_from = combo_box_from.get()
     curr_to = combo_box_to.get()
     #print(curr_from+" "+curr_to+"\n")
+    if curr_to=="HUF" or curr_to=="JPY" or curr_to=="KRW":
+        value = value*100
     if curr_from=="HUF" or curr_from=="JPY" or curr_from=="KRW":
         value = value/100
     for i in range(33):
@@ -19,29 +21,48 @@ def clicked():
             t_to = read_value_of_currency(curr_to)
     value = value/float(t_to)
     value = value*float(t_from)
-    label_result.configure(text="Result: "+str(value.__round__(3)))
+    label_result.configure(text=str(value.__round__(3)))
 
-window = Tk()
+root = Tk()
+root.geometry("600x400")
 
-window.title("GUI")
-window.geometry('400x400')
-window.configure(background='blue')
-label_1 = Label(window,text="Currency")
-label_2 = Label(window,text="from")
-label_3 = Label(window,text="to")
-label_result = Label(window,text="Result: ")
-insert_value = Entry(window,width=10)
-combo_box_from = ttk.Combobox(window)
-combo_box_to = ttk.Combobox(window)
+C = Canvas(root, bg="white", height=250, width=300)
+filename = PhotoImage(file = "background_money.png")
+background_label = Label(root, image=filename)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+frame = Frame(root, bg='blue')
+frame.pack_propagate(0)
+frame.pack(fill='both', expand='True', padx=100, pady=100)
+
+label_1 = Label(frame,text="Currency Converter")
+label_1.config(bg='blue', fg='white')
+label_1.place(x=0, y=0)
+label_2 = Label(frame,text="amount")
+label_2.config(bg='blue', fg='white')
+label_2.place(x=70, y=30)
+label_3 = Label(frame,text="from")
+label_3.config(bg='blue', fg='white')
+label_3.place(x=150, y=30)
+label_4 = Label(frame,text="to")
+label_4.config(bg='blue', fg='white')
+label_4.place(x=250, y=30)
+
+label_result = Label(frame,text="",bg='blue')
+label_result.pack(fill='both', side='bottom', expand='True')
+label_result.config(font=("Colibri", 40))
+label_result.place(x=120, y=100)
+insert_value = Entry(frame,width=10)
+insert_value.place(x=70, y=50)
+
+combo_box_from = ttk.Combobox(frame, width=10)
+combo_box_from.place(x=150,y=50)
+combo_box_to = ttk.Combobox(frame,width=10)
+combo_box_to.place(x=250,y=50)
 combo_box_to['values']=list_of_currencies
 combo_box_from['values']=list_of_currencies
-run_button = Button(window,text="Run",command=clicked)
-label_1.grid(column=0,row=0)
-label_2.grid(column=0,row=1)
-label_3.grid(column=0,row=2)
-insert_value.grid(column=1,row=0)
-combo_box_from.grid(column=1,row=1)
-combo_box_to.grid(column=1,row=2)
-run_button.grid(column=0,row=3)
-label_result.grid(column=1,row=3)
-window.mainloop()
+run_button = Button(frame,text=">",command=clicked, bg='#2F328D')
+run_button.bind("<Return>")
+run_button.place(x=350,y=48)
+
+root.mainloop()

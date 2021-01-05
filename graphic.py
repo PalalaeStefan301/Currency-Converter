@@ -9,7 +9,6 @@ def clicked():
     value = float(insert_value.get())
     curr_from = combo_box_from.get()
     curr_to = combo_box_to.get()
-    #print(curr_from+" "+curr_to+"\n")
     if curr_to=="HUF" or curr_to=="JPY" or curr_to=="KRW":
         value = value*100
     if curr_from=="HUF" or curr_from=="JPY" or curr_from=="KRW":

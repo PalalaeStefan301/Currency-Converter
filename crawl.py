@@ -18,7 +18,6 @@ def read_value_of_currency(searched_currency):
         temp = temp.split(' ')
         if(temp[0]==searched_currency):
             return temp[1]
-    #print(list)
     f.close()
 
 def read_currencies():
@@ -43,13 +42,11 @@ def main():
     for td_elem in tb.find_all('th'):
         if i!=0:
             list_t.append(td_elem.get_text())
-            #print_file(str(td_elem.get_text()))
         i = i+1
     i = 0
     for td_elem in tb.find_all('td'):
         if i!=0:
             list_t.append(td_elem.get_text())
-            #print_file(str(td_elem.get_text()))
         if i>31:
             break
         i = i+1
